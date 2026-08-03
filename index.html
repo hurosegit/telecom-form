@@ -55,29 +55,72 @@
         .field { position: absolute; font-size: 12px; font-weight: bold; color: #0000ff; white-space: nowrap; pointer-events: none; }
 
         /* ========================================================= */
-        /* kt M mobile 8월 서식지(Ver.2026.08.01) 좌표 매핑 설정    */
+        /* kt M mobile 8월 서식지(Ver.2026.08.01) 정밀 좌표 매핑     */
         /* ========================================================= */
-        #p1_workType     { top: 128px; left: 110px; }
-        #p1_custType     { top: 128px; left: 240px; }
-        #p1_name         { top: 158px; left: 110px; }
-        #p1_phone        { top: 158px; left: 290px; }
-        #p1_rrn          { top: 182px; left: 110px; }
-        #p1_email        { top: 182px; left: 290px; }
-        #p1_address      { top: 206px; left: 110px; }
-        #p1_model        { top: 158px; left: 510px; }
-        #p1_serial       { top: 182px; left: 510px; }
-        #p1_price        { top: 206px; left: 510px; }
-        #p1_support      { top: 230px; left: 510px; }
-        #p1_principal    { top: 254px; left: 510px; }
-        #p1_payMethod    { top: 285px; left: 110px; }
-        #p1_bankName     { top: 285px; left: 230px; }
-        #p1_payNum       { top: 309px; left: 110px; }
-        #p1_payOwner     { top: 333px; left: 110px; }
-        #p1_planName     { top: 285px; left: 510px; }
-        #p1_planFee      { top: 309px; left: 510px; }
-        #p1_monthPay     { top: 333px; left: 510px; }
-        #p1_date         { top: 525px; left: 120px; }
-        #p1_sign         { top: 525px; left: 320px; }
+        
+        /* [1장: 이용신청서] */
+        #p1_price        { top: 115px; left: 130px; }
+        #p1_support      { top: 115px; left: 250px; }
+        #p1_principal    { top: 160px; left: 370px; }
+        #p1_model        { top: 115px; left: 710px; }
+        #f1_serial       { top: 135px; left: 710px; }
+        #p1_planName     { top: 250px; left: 120px; }
+        #p1_planFee      { top: 250px; left: 260px; }
+        #p1_monthPay     { top: 312px; left: 730px; }
+
+        #p1_name         { top: 350px; left: 110px; }
+        #p1_rrn          { top: 350px; left: 400px; }
+        #p1_phone        { top: 372px; left: 110px; }
+        #p1_email        { top: 372px; left: 400px; }
+        #p1_address      { top: 395px; left: 110px; }
+
+        #p1_bankName     { top: 466px; left: 250px; }
+        #f1_payNum       { top: 466px; left: 440px; }
+        #p1_payOwner     { top: 508px; left: 110px; }
+
+        #p1_reqPhone     { top: 535px; left: 240px; }
+        #p1_simModel     { top: 625px; left: 520px; }
+        #p1_simSerial    { top: 648px; left: 520px; }
+        #p1_imei         { top: 648px; left: 110px; }
+
+        #p1_mnpPhone     { top: 718px; left: 250px; }
+        #p1_mnpPrevOp    { top: 718px; left: 510px; }
+
+        #p1_date         { top: 930px; left: 210px; font-size: 13px; }
+        #p1_sign         { top: 930px; left: 640px; font-size: 13px; }
+
+        /* [2장: 동의서 (1)] */
+        #p2_sign1        { top: 125px; left: 680px; }
+        #p2_sign2        { top: 508px; left: 680px; }
+
+        /* [3장: 동의서 (2)] */
+        #p3_sign1        { top: 498px; left: 680px; }
+        #p3_sign2        { top: 588px; left: 680px; }
+        #p3_sign3        { top: 672px; left: 680px; }
+        #p3_sign4        { top: 950px; left: 680px; }
+
+        /* [4장: 동의서 (3)] */
+        #p4_sign1        { top: 205px; left: 680px; }
+        #p4_sign2        { top: 318px; left: 680px; }
+        #p4_sign3        { top: 412px; left: 680px; }
+        #p4_sign4        { top: 550px; left: 680px; }
+        #p4_sign5        { top: 705px; left: 680px; }
+        #p4_sign6        { top: 802px; left: 680px; }
+        #p4_sign7        { top: 920px; left: 680px; }
+
+        /* [5장: 동의서 (4) & 결합] */
+        #p5_sign1        { top: 572px; left: 680px; }
+
+        /* [6장: 표준안내서] */
+        #p6_price        { top: 165px; left: 130px; }
+        #p6_support      { top: 165px; left: 280px; }
+        #p6_principal    { top: 228px; left: 200px; }
+        #p6_planName     { top: 262px; left: 130px; }
+        #p6_planFee      { top: 262px; left: 250px; }
+        #p6_monthPay     { top: 330px; left: 730px; }
+        #p6_phone        { top: 885px; left: 220px; }
+        #p6_date         { top: 928px; left: 200px; }
+        #p6_sign         { top: 928px; left: 640px; }
 
         @media print {
             body { padding: 0; background: #fff; }
@@ -92,7 +135,7 @@
 
 <div class="header-bar">
     <h1>📱 kt M mobile 개통 타이핑 시스템 (Ver.2026.08.01)</h1>
-    <div class="info">적용 서식지: forms/ktm_1.jpg ~ ktm_6.jpg</div>
+    <div class="info">적용 서식지: ktm_1.jpg ~ ktm_6.jpg</div>
 </div>
 
 <div class="main-layout">
@@ -179,7 +222,7 @@
             <div class="form-group">
                 <label>자동납부 구분</label>
                 <select id="in_payMethod" onchange="updateView()">
-                    <option value="자동이체(은행)">자동이체(은행)</option>
+                    <option value="자동이체">자동이체</option>
                     <option value="신용카드">신용카드</option>
                 </select>
             </div>
@@ -197,6 +240,34 @@
             </div>
         </div>
 
+        <div class="panel-title">4. 이용신청내용 및 MNP</div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label>가입희망번호</label>
+                <input type="text" id="in_reqPhone" placeholder="010-XXXX-5678" oninput="updateView()">
+            </div>
+            <div class="form-group">
+                <label>IMEI (일련번호)</label>
+                <input type="text" id="in_imei" placeholder="351234567890123" oninput="updateView()">
+            </div>
+            <div class="form-group">
+                <label>SIM 모델명</label>
+                <input type="text" id="in_simModel" placeholder="K9040" oninput="updateView()">
+            </div>
+            <div class="form-group">
+                <label>SIM 일련번호</label>
+                <input type="text" id="in_simSerial" placeholder="00012345" oninput="updateView()">
+            </div>
+            <div class="form-group">
+                <label>번호이동 할 전화번호</label>
+                <input type="text" id="in_mnpPhone" placeholder="010-9876-5432" oninput="updateView()">
+            </div>
+            <div class="form-group">
+                <label>변경 전 통신사</label>
+                <input type="text" id="in_mnpPrevOp" placeholder="SKT / KT / LGU+" oninput="updateView()">
+            </div>
+        </div>
+
         <div class="action-btns">
             <button class="btn btn-jpg" onclick="downloadAllJPG()">📸 8월 최신 서식지 6장 전체 JPG 다운로드</button>
             <button class="btn btn-print" onclick="window.print()">🖨️ A4 6장 전체 인쇄</button>
@@ -204,77 +275,88 @@
         </div>
     </div>
 
-    <!-- 우측 1~6장 연속 미리보기 Canvas -->
+    <!-- 우측: 서식지 오버레이 Canvas -->
     <div class="preview-panel">
         <!-- 1장: 이용신청서 -->
-        <div class="paper-canvas" id="page1" style="background-image: url('forms/ktm_1.jpg');">
+        <div class="paper-canvas" id="page1" style="background-image: url('ktm_1.jpg');">
             <div class="page-tag">1장: 이용신청서</div>
-            <div class="field" style="top:128px; left:110px;" id="p1_workType"></div>
-            <div class="field" style="top:128px; left:240px;" id="p1_custType"></div>
-            <div class="field" style="top:158px; left:110px;" id="p1_name"></div>
-            <div class="field" style="top:158px; left:290px;" id="p1_phone"></div>
-            <div class="field" style="top:182px; left:110px;" id="p1_rrn"></div>
-            <div class="field" style="top:182px; left:290px;" id="p1_email"></div>
-            <div class="field" style="top:206px; left:110px;" id="p1_address"></div>
-            <div class="field" style="top:158px; left:510px;" id="p1_model"></div>
-            <div class="field" style="top:182px; left:510px;" id="p1_serial"></div>
-            <div class="field" style="top:206px; left:510px;" id="p1_price"></div>
-            <div class="field" style="top:230px; left:510px;" id="p1_support"></div>
-            <div class="field" style="top:254px; left:510px;" id="p1_principal"></div>
-            <div class="field" style="top:285px; left:110px;" id="p1_payMethod"></div>
-            <div class="field" style="top:285px; left:230px;" id="p1_bankName"></div>
-            <div class="field" style="top:309px; left:110px;" id="p1_payNum"></div>
-            <div class="field" style="top:333px; left:110px;" id="p1_payOwner"></div>
-            <div class="field" style="top:285px; left:510px;" id="p1_planName"></div>
-            <div class="field" style="top:309px; left:510px;" id="p1_planFee"></div>
-            <div class="field" style="top:333px; left:510px;" id="p1_monthPay"></div>
-            <div class="field" style="top:525px; left:120px;" id="p1_date"></div>
-            <div class="field" style="top:525px; left:320px;" id="p1_sign"></div>
+            <div class="field" id="p1_price"></div>
+            <div class="field" id="p1_support"></div>
+            <div class="field" id="p1_principal"></div>
+            <div class="field" id="p1_model"></div>
+            <div class="field" id="f1_serial"></div>
+            <div class="field" id="p1_planName"></div>
+            <div class="field" id="p1_planFee"></div>
+            <div class="field" id="p1_monthPay"></div>
+
+            <div class="field" id="p1_name"></div>
+            <div class="field" id="p1_rrn"></div>
+            <div class="field" id="p1_phone"></div>
+            <div class="field" id="p1_email"></div>
+            <div class="field" id="p1_address"></div>
+
+            <div class="field" id="p1_bankName"></div>
+            <div class="field" id="f1_payNum"></div>
+            <div class="field" id="p1_payOwner"></div>
+
+            <div class="field" id="p1_reqPhone"></div>
+            <div class="field" id="p1_simModel"></div>
+            <div class="field" id="p1_simSerial"></div>
+            <div class="field" id="p1_imei"></div>
+
+            <div class="field" id="p1_mnpPhone"></div>
+            <div class="field" id="p1_mnpPrevOp"></div>
+
+            <div class="field" id="p1_date"></div>
+            <div class="field" id="p1_sign"></div>
         </div>
 
         <!-- 2장: 동의서 (1) -->
-        <div class="paper-canvas" id="page2" style="background-image: url('forms/ktm_2.jpg');">
+        <div class="paper-canvas" id="page2" style="background-image: url('ktm_2.jpg');">
             <div class="page-tag">2장: 활용동의서 (1)</div>
-            <div class="field" style="top:235px; left:620px;" id="p2_sign1"></div>
-            <div class="field" style="top:980px; left:620px;" id="p2_sign2"></div>
+            <div class="field" id="p2_sign1"></div>
+            <div class="field" id="p2_sign2"></div>
         </div>
 
         <!-- 3장: 동의서 (2) -->
-        <div class="paper-canvas" id="page3" style="background-image: url('forms/ktm_3.jpg');">
+        <div class="paper-canvas" id="page3" style="background-image: url('ktm_3.jpg');">
             <div class="page-tag">3장: 활용동의서 (2)</div>
-            <div class="field" style="top:320px; left:620px;" id="p3_sign1"></div>
-            <div class="field" style="top:410px; left:620px;" id="p3_sign2"></div>
-            <div class="field" style="top:500px; left:620px;" id="p3_sign3"></div>
-            <div class="field" style="top:740px; left:620px;" id="p3_sign4"></div>
+            <div class="field" id="p3_sign1"></div>
+            <div class="field" id="p3_sign2"></div>
+            <div class="field" id="p3_sign3"></div>
+            <div class="field" id="p3_sign4"></div>
         </div>
 
         <!-- 4장: 동의서 (3) -->
-        <div class="paper-canvas" id="page4" style="background-image: url('forms/ktm_4.jpg');">
+        <div class="paper-canvas" id="page4" style="background-image: url('ktm_4.jpg');">
             <div class="page-tag">4장: 활용동의서 (3)</div>
-            <div class="field" style="top:250px; left:620px;" id="p4_sign1"></div>
-            <div class="field" style="top:430px; left:620px;" id="p4_sign2"></div>
-            <div class="field" style="top:600px; left:620px;" id="p4_sign3"></div>
-            <div class="field" style="top:710px; left:620px;" id="p4_sign4"></div>
+            <div class="field" id="p4_sign1"></div>
+            <div class="field" id="p4_sign2"></div>
+            <div class="field" id="p4_sign3"></div>
+            <div class="field" id="p4_sign4"></div>
+            <div class="field" id="p4_sign5"></div>
+            <div class="field" id="p4_sign6"></div>
+            <div class="field" id="p4_sign7"></div>
         </div>
 
-        <!-- 5장: 동의서 (4) & 아무나 결합 -->
-        <div class="paper-canvas" id="page5" style="background-image: url('forms/ktm_5.jpg');">
+        <!-- 5장: 동의서 (4) & 결합 -->
+        <div class="paper-canvas" id="page5" style="background-image: url('ktm_5.jpg');">
             <div class="page-tag">5장: 활용동의서 (4) & 결합</div>
-            <div class="field" style="top:680px; left:620px;" id="p5_sign1"></div>
+            <div class="field" id="p5_sign1"></div>
         </div>
 
         <!-- 6장: 무선서비스 계약 표준안내서 -->
-        <div class="paper-canvas" id="page6" style="background-image: url('forms/ktm_6.jpg');">
+        <div class="paper-canvas" id="page6" style="background-image: url('ktm_6.jpg');">
             <div class="page-tag">6장: 표준안내서</div>
-            <div class="field" style="top:75px; left:130px;" id="p6_price"></div>
-            <div class="field" style="top:75px; left:330px;" id="p6_principal"></div>
-            <div class="field" style="top:105px; left:130px;" id="p6_support"></div>
-            <div class="field" style="top:105px; left:530px;" id="p6_planName"></div>
-            <div class="field" style="top:135px; left:130px;" id="p6_planFee"></div>
-            <div class="field" style="top:135px; left:530px;" id="p6_monthPay"></div>
-            <div class="field" style="top:440px; left:320px;" id="p6_phone"></div>
-            <div class="field" style="top:470px; left:120px;" id="p6_date"></div>
-            <div class="field" style="top:470px; left:320px;" id="p6_sign"></div>
+            <div class="field" id="p6_price"></div>
+            <div class="field" id="p6_support"></div>
+            <div class="field" id="p6_principal"></div>
+            <div class="field" id="p6_planName"></div>
+            <div class="field" id="p6_planFee"></div>
+            <div class="field" id="p6_monthPay"></div>
+            <div class="field" id="p6_phone"></div>
+            <div class="field" id="p6_date"></div>
+            <div class="field" id="p6_sign"></div>
         </div>
     </div>
 </div>
@@ -288,25 +370,30 @@
         const nameSign = name ? `${name} (인)` : '';
 
         // 1장 데이터
-        document.getElementById('p1_workType').innerText = document.getElementById('in_workType').value;
-        document.getElementById('p1_custType').innerText = document.getElementById('in_custType').value;
         document.getElementById('p1_name').innerText = name;
-        document.getElementById('p1_phone').innerText = document.getElementById('in_phone').value;
         document.getElementById('p1_rrn').innerText = document.getElementById('in_rrn').value;
+        document.getElementById('p1_phone').innerText = document.getElementById('in_phone').value;
         document.getElementById('p1_email').innerText = document.getElementById('in_email').value;
         document.getElementById('p1_address').innerText = document.getElementById('in_address').value;
         document.getElementById('p1_model').innerText = document.getElementById('in_model').value;
-        document.getElementById('p1_serial').innerText = document.getElementById('in_serial').value;
+        document.getElementById('f1_serial').innerText = document.getElementById('in_serial').value;
         document.getElementById('p1_price').innerText = document.getElementById('in_price').value;
         document.getElementById('p1_support').innerText = document.getElementById('in_support').value;
         document.getElementById('p1_principal').innerText = document.getElementById('in_principal').value;
-        document.getElementById('p1_payMethod').innerText = document.getElementById('in_payMethod').value;
         document.getElementById('p1_bankName').innerText = document.getElementById('in_bankName').value;
-        document.getElementById('p1_payNum').innerText = document.getElementById('in_payNum').value;
+        document.getElementById('f1_payNum').innerText = document.getElementById('in_payNum').value;
         document.getElementById('p1_payOwner').innerText = document.getElementById('in_payOwner').value;
         document.getElementById('p1_planName').innerText = document.getElementById('in_planName').value;
         document.getElementById('p1_planFee').innerText = document.getElementById('in_planFee').value;
         document.getElementById('p1_monthPay').innerText = document.getElementById('in_monthPay').value;
+
+        document.getElementById('p1_reqPhone').innerText = document.getElementById('in_reqPhone').value;
+        document.getElementById('p1_simModel').innerText = document.getElementById('in_simModel').value;
+        document.getElementById('p1_simSerial').innerText = document.getElementById('in_simSerial').value;
+        document.getElementById('p1_imei').innerText = document.getElementById('in_imei').value;
+        document.getElementById('p1_mnpPhone').innerText = document.getElementById('in_mnpPhone').value;
+        document.getElementById('p1_mnpPrevOp').innerText = document.getElementById('in_mnpPrevOp').value;
+
         document.getElementById('p1_date').innerText = dateStr;
         document.getElementById('p1_sign').innerText = nameSign;
 
@@ -321,6 +408,9 @@
         document.getElementById('p4_sign2').innerText = nameSign;
         document.getElementById('p4_sign3').innerText = nameSign;
         document.getElementById('p4_sign4').innerText = nameSign;
+        document.getElementById('p4_sign5').innerText = nameSign;
+        document.getElementById('p4_sign6').innerText = nameSign;
+        document.getElementById('p4_sign7').innerText = nameSign;
         document.getElementById('p5_sign1').innerText = nameSign;
 
         // 6장 표준안내서 데이터
