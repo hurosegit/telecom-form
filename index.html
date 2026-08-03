@@ -3,99 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>통신사 통합 개통 타이핑 신청서 시스템</title>
+    <title>kt M mobile 개통 타이핑 신청서 시스템</title>
+    <!-- 이미지 저장용 html2canvas 라이브러리 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         * { box-sizing: border-box; font-family: 'Pretendard', '맑은 고딕', sans-serif; }
-        body { margin: 0; padding: 15px; background-color: #eaedeff0; color: #222; }
+        body { margin: 0; padding: 15px; background-color: #f0f2f5; color: #1e1e1e; }
         
-        .header-bar { max-width: 1400px; margin: 0 auto 15px; background: #1a2536; color: #fff; padding: 15px 20px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; }
-        .header-bar h1 { margin: 0; font-size: 20px; }
+        .header-bar { max-width: 1400px; margin: 0 auto 15px; background: #ea1d25; color: #fff; padding: 15px 20px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 3px 6px rgba(0,0,0,0.1); }
+        .header-bar h1 { margin: 0; font-size: 20px; font-weight: 800; display: flex; align-items: center; gap: 10px; }
+        .header-bar .tag { background: #fff; color: #ea1d25; padding: 3px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
 
         .main-layout { display: flex; gap: 20px; max-width: 1400px; margin: 0 auto; align-items: flex-start; }
 
         /* 좌측: 타이핑 입력 폼 */
         .typing-panel { flex: 1; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); max-height: 90vh; overflow-y: auto; }
-        .panel-title { font-size: 16px; font-weight: bold; color: #0056b3; border-bottom: 2px solid #0056b3; padding-bottom: 8px; margin-top: 20px; margin-bottom: 12px; }
+        .panel-title { font-size: 15px; font-weight: bold; color: #ea1d25; border-bottom: 2px solid #ea1d25; padding-bottom: 6px; margin-top: 20px; margin-bottom: 12px; }
         .panel-title:first-of-type { margin-top: 0; }
 
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .form-group { display: flex; flex-direction: column; }
         .form-group.full { grid-column: span 2; }
-        .form-group label { font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #555; }
-        .form-group input, .form-group select { padding: 7px 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px; }
-        .form-group input:focus, .form-group select:focus { border-color: #0056b3; outline: none; background-color: #f0f7ff; }
+        .form-group label { font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #444; }
+        .form-group input, .form-group select { padding: 8px 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px; }
+        .form-group input:focus, .form-group select:focus { border-color: #ea1d25; outline: none; background-color: #fff9f9; }
 
-        /* 우측: 서식지 미리보기 및 인쇄 영역 */
-        .preview-panel { flex: 1.2; background: #525659; padding: 20px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; }
+        /* 액션 버튼 */
+        .action-btns { width: 100%; display: flex; gap: 10px; margin-top: 20px; }
+        .btn-action { flex: 1; padding: 12px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 14px; transition: 0.2s; }
+        .btn-jpg { background: #008080; color: #fff; }
+        .btn-jpg:hover { background: #006666; }
+        .btn-print { background: #333; color: #fff; }
+        .btn-print:hover { background: #111; }
+        .btn-reset { background: #888; color: #fff; flex: 0.5; }
+
+        /* 우측: 서식지 미리보기 영역 */
+        .preview-panel { flex: 1.2; background: #606468; padding: 20px; border-radius: 8px; display: flex; flex-direction: column; align-items: center; width: 100%; }
         
-        /* 통신사 및 서식 선택 탭 */
-        .tab-group { width: 100%; display: flex; gap: 8px; margin-bottom: 15px; }
-        .tab-btn { flex: 1; padding: 10px; border: none; background: #333; color: #fff; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 13px; }
-        .tab-btn.active.skt { background: #e60000; }
-        .tab-btn.active.kt { background: #00b0d8; }
-        .tab-btn.active.lgu { background: #e6007e; }
-        .tab-btn.active.mvno { background: #6f42c1; }
-
-        .doc-select-group { width: 100%; display: flex; gap: 8px; margin-bottom: 15px; }
-        .doc-btn { flex: 1; padding: 8px; border: 1px solid #ddd; background: #fff; border-radius: 4px; cursor: pointer; font-size: 12px; }
-        .doc-btn.active { background: #333; color: #fff; font-weight: bold; }
-
-        /* 실제 A4 서식지 렌더링 */
-        .paper-container { width: 100%; max-width: 750px; background: #fff; padding: 30px; border-radius: 2px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); min-height: 950px; box-sizing: border-border; }
-        .doc-header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 15px; }
-        .doc-header h2 { margin: 0; font-size: 22px; letter-spacing: -1px; }
-        .doc-header .badge { display: inline-block; padding: 2px 8px; color: white; font-size: 12px; font-weight: bold; border-radius: 3px; margin-bottom: 5px; }
+        /* A4 규격 서식지 양식 */
+        .paper-container { width: 100%; max-width: 750px; background: #fff; padding: 35px 30px; border-radius: 2px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); box-sizing: border-box; }
         
-        .badge.skt { background-color: #e60000; }
-        .badge.kt { background-color: #00b0d8; }
-        .badge.lgu { background-color: #e6007e; }
-        .badge.mvno { background-color: #6f42c1; }
+        .mmobile-header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 3px solid #ea1d25; padding-bottom: 8px; margin-bottom: 15px; }
+        .mmobile-logo { font-size: 24px; font-weight: 900; color: #ea1d25; letter-spacing: -1px; }
+        .mmobile-logo span { color: #333; font-weight: 400; font-size: 14px; margin-left: 6px; }
+        .mmobile-doc-title { font-size: 18px; font-weight: bold; color: #111; }
 
-        .sheet-table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
-        .sheet-table th, .sheet-table td { border: 1px solid #333; padding: 6px 8px; font-size: 12px; height: 32px; }
-        .sheet-table th { background-color: #f2f2f2; font-weight: bold; text-align: center; width: 20%; }
-        .sheet-table td { text-align: left; width: 30%; }
+        .sheet-table { width: 100%; border-collapse: collapse; margin-bottom: 12px; }
+        .sheet-table th, .sheet-table td { border: 1px solid #222; padding: 6px 8px; font-size: 12px; height: 30px; }
+        .sheet-table th { background-color: #f7f7f7; font-weight: bold; text-align: center; width: 22%; color: #222; }
+        .sheet-table td { text-align: left; width: 28%; }
         
         .val { font-weight: bold; color: #000; word-break: break-all; }
-        .notice-box { border: 1px solid #aaa; padding: 10px; font-size: 11px; color: #555; background: #fafafa; margin-top: 20px; line-height: 1.5; }
+        .terms-box { border: 1px solid #777; padding: 10px; font-size: 10.5px; color: #444; background: #fdfdfd; margin-top: 15px; line-height: 1.45; }
 
-        .action-btns { width: 100%; display: flex; gap: 10px; margin-top: 15px; }
-        .btn-action { flex: 1; padding: 12px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 14px; }
-        .btn-print { background: #28a745; color: #fff; }
-        .btn-reset { background: #dc3545; color: #fff; }
-
-        /* A4 인쇄 스타일 최적화 */
+        /* 인쇄 전용 CSS */
         @media print {
             body { background: #fff; padding: 0; }
-            .header-bar, .typing-panel, .tab-group, .doc-select-group, .action-btns { display: none !important; }
+            .header-bar, .typing-panel, .action-btns { display: none !important; }
             .main-layout { display: block; }
             .preview-panel { background: #fff; padding: 0; }
             .paper-container { box-shadow: none; width: 100%; max-width: 100%; padding: 0; border: none; }
+        }
+
+        /* 모바일 반응형 대응 */
+        @media (max-width: 900px) {
+            .main-layout { flex-direction: column; }
+            .preview-panel { padding: 10px; }
+            .paper-container { padding: 15px; }
         }
     </style>
 </head>
 <body>
 
 <div class="header-bar">
-    <h1>📱 통신사 통합 개통 신청서 자동 타이핑 시스템</h1>
-    <span>영업/개통 대행사 전용</span>
+    <h1>📱 kt M mobile 개통 신청서 입력 시스템 <span class="tag">알뜰폰(MVNO)</span></h1>
+    <span style="font-size: 13px;">영업 / 개통 대행사 전용</span>
 </div>
 
 <div class="main-layout">
-    <!-- 좌측 입력 패널 -->
+    <!-- 좌측 타이핑 입력창 -->
     <div class="typing-panel">
-        <div class="panel-title">1. 고객 기본 신상 정보</div>
+        <div class="panel-title">1. 고객(신청인) 정보 입력</div>
         <div class="form-grid">
             <div class="form-group">
-                <label>고객성명</label>
+                <label>고객명</label>
                 <input type="text" id="in_name" placeholder="홍길동" oninput="syncData()">
             </div>
             <div class="form-group">
-                <label>생년월일 / 주민번호</label>
+                <label>주민등록번호 (전체)</label>
                 <input type="text" id="in_rrn" placeholder="900101-1******" oninput="syncData()">
             </div>
             <div class="form-group">
-                <label>개통 연락처</label>
+                <label>개통 희망번호/연락처</label>
                 <input type="text" id="in_phone" placeholder="010-1234-5678" oninput="syncData()">
             </div>
             <div class="form-group">
@@ -117,48 +116,47 @@
             </div>
             <div class="form-group">
                 <label>발급일자 / 면허번호</label>
-                <input type="text" id="in_idDate" placeholder="2020.01.15 / 서울-12-123456" oninput="syncData()">
+                <input type="text" id="in_idDate" placeholder="2022.05.20 / 서울-12-123456" oninput="syncData()">
             </div>
         </div>
 
-        <div class="panel-title">2. 단말기 및 개통 조건</div>
+        <div class="panel-title">2. 단말기 및 서비스 정보</div>
         <div class="form-grid">
             <div class="form-group">
                 <label>가입유형</label>
                 <select id="in_joinType" onchange="syncData()">
-                    <option value="기기변경">기기변경</option>
-                    <option value="번호이동">번호이동 (MNP)</option>
                     <option value="신규가입">신규가입</option>
+                    <option value="번호이동 (MNP)">번호이동 (MNP)</option>
+                    <option value="기기변경">기기변경</option>
                 </select>
             </div>
             <div class="form-group">
-                <label>모델명</label>
-                <input type="text" id="in_model" placeholder="SM-S928N (S24 울트라)" oninput="syncData()">
+                <label>단말기 모델명</label>
+                <input type="text" id="in_model" placeholder="SM-S921N (S24)" oninput="syncData()">
             </div>
             <div class="form-group">
                 <label>단말 일련번호</label>
-                <input type="text" id="in_serial" placeholder="0123456" oninput="syncData()">
+                <input type="text" id="in_serial" placeholder="1234567" oninput="syncData()">
             </div>
             <div class="form-group">
-                <label>USIM 번호</label>
-                <input type="text" id="in_usim" placeholder="K9040-12345678" oninput="syncData()">
+                <label>USIM 일련번호</label>
+                <input type="text" id="in_usim" placeholder="M8000-123456" oninput="syncData()">
             </div>
             <div class="form-group">
-                <label>약정 방식</label>
+                <label>약정유형</label>
                 <select id="in_contract" onchange="syncData()">
-                    <option value="공시지원 약정 (24개월)">공시지원 약정 (24개월)</option>
-                    <option value="선택약정 25% (24개월)">선택약정 25% (24개월)</option>
-                    <option value="선택약정 25% (12개월)">선택약정 25% (12개월)</option>
                     <option value="무약정">무약정</option>
+                    <option value="24개월 자급제/선택약정">24개월 자급제/선택약정</option>
+                    <option value="24개월 공시지원 약정">24개월 공시지원 약정</option>
                 </select>
             </div>
             <div class="form-group">
                 <label>요금제명</label>
-                <input type="text" id="in_plan" placeholder="5G 프라임플러스 (99,000원)" oninput="syncData()">
+                <input type="text" id="in_plan" placeholder="모두다 맘껏 11GB+ (월 33,000원)" oninput="syncData()">
             </div>
             <div class="form-group full">
-                <label>부가서비스 / 기타 조건</label>
-                <input type="text" id="in_addon" placeholder="우주패스 all (3개월 유지), 우주폰케어" oninput="syncData()">
+                <label>부가서비스 / 기타 요청사항</label>
+                <input type="text" id="in_addon" placeholder="통화대기, 데이터안심차단" oninput="syncData()">
             </div>
         </div>
 
@@ -168,74 +166,58 @@
                 <label>납부 수단</label>
                 <select id="in_payMethod" onchange="syncData()">
                     <option value="은행 계좌이체">은행 계좌이체</option>
-                    <option value="신용카드 자동결제">신용카드 자동결제</option>
+                    <option value="신용카드 결제">신용카드 결제</option>
                 </select>
             </div>
             <div class="form-group">
-                <label>금융사 / 카드사명</label>
-                <input type="text" id="in_bankName" placeholder="KB국민은행 / 신한카드" oninput="syncData()">
+                <label>금융사 / 카드사</label>
+                <input type="text" id="in_bankName" placeholder="NH농협은행 / 삼성카드" oninput="syncData()">
             </div>
             <div class="form-group">
                 <label>계좌번호 / 카드번호</label>
-                <input type="text" id="in_payNum" placeholder="123-456-789012" oninput="syncData()">
+                <input type="text" id="in_payNum" placeholder="302-1234-5678-01" oninput="syncData()">
             </div>
             <div class="form-group">
                 <label>예금주 성명</label>
-                <input type="text" id="in_payOwner" placeholder="홍길동 (본인)" oninput="syncData()">
+                <input type="text" id="in_payOwner" placeholder="홍길동" oninput="syncData()">
             </div>
         </div>
 
         <div class="action-btns">
-            <button class="btn-action btn-print" onclick="window.print()">🖨️ 서식지 인쇄 (A4)</button>
-            <button class="btn-action btn-reset" onclick="resetForm()">🔄 입력 초기화</button>
+            <button class="btn-action btn-jpg" onclick="exportToJPG()">📸 JPG 저장</button>
+            <button class="btn-action btn-print" onclick="window.print()">🖨️ A4 인쇄</button>
+            <button class="btn-action btn-reset" onclick="resetForm()">🔄 초기화</button>
         </div>
     </div>
 
-    <!-- 우측 서식지 미리보기 패널 -->
+    <!-- 우측 서식지 미리보기 (kt M mobile 공식 양식) -->
     <div class="preview-panel">
-        <!-- 통신사 선택 탭 -->
-        <div class="tab-group">
-            <button class="tab-btn active skt" onclick="setCarrier('SKT', 'skt')">SKT</button>
-            <button class="tab-btn kt" onclick="setCarrier('KT', 'kt')">KT</button>
-            <button class="tab-btn lgu" onclick="setCarrier('LGU+', 'lgu')">LGU+</button>
-            <button class="tab-btn mvno" onclick="setCarrier('알뜰폰', 'mvno')">알뜰폰(MVNO)</button>
-        </div>
-
-        <!-- 서식지 종류 탭 -->
-        <div class="doc-select-group">
-            <button class="doc-btn active" onclick="setDocType('신청서')">가입/변경 신청서</button>
-            <button class="doc-btn" onclick="setDocType('MNP')">번호이동(MNP) 동의서</button>
-            <button class="doc-btn" onclick="setDocType('위임장')">위임장 및 동의서</button>
-        </div>
-
-        <!-- 출력용 종이 (A4 규격) -->
-        <div class="paper-container" id="paper">
-            <div class="doc-header">
-                <span class="badge skt" id="docBadge">SKT</span>
-                <h2 id="docTitle">이동전화 서비스 가입 신청서</h2>
+        <div class="paper-container" id="paper-preview">
+            <div class="mmobile-header">
+                <div class="mmobile-logo">kt M mobile <span>| 알뜰폰 개통서식지</span></div>
+                <div class="mmobile-doc-title">이동전화 서비스 가입 신청서</div>
             </div>
 
-            <!-- 서식지 양식 테이블 -->
             <table class="sheet-table">
                 <tr>
-                    <th colspan="4" style="background:#e9ecef; text-align:left; padding-left:10px;">■ 신청인 (고객 정보)</th>
+                    <th colspan="4" style="background:#ea1d25; color:#fff; text-align:left; padding-left:10px;">1. 신청인 (고객) 정보</th>
                 </tr>
                 <tr>
                     <th>고객명</th>
                     <td><span class="val" id="out_name">-</span></td>
-                    <th>생년월일</th>
+                    <th>주민등록번호</th>
                     <td><span class="val" id="out_rrn">-</span></td>
                 </tr>
                 <tr>
-                    <th>개통번호</th>
+                    <th>개통 희망번호</th>
                     <td><span class="val" id="out_phone">-</span></td>
                     <th>비상연락처</th>
                     <td><span class="val" id="out_subPhone">-</span></td>
                 </tr>
                 <tr>
-                    <th>신분증증빙</th>
+                    <th>신분증 구분</th>
                     <td><span class="val" id="out_idType">주민등록증</span></td>
-                    <th>발급일/면허</th>
+                    <th>발급일/면허번호</th>
                     <td><span class="val" id="out_idDate">-</span></td>
                 </tr>
                 <tr>
@@ -246,26 +228,26 @@
 
             <table class="sheet-table">
                 <tr>
-                    <th colspan="4" style="background:#e9ecef; text-align:left; padding-left:10px;">■ 단말기 및 개통 가입 정보</th>
+                    <th colspan="4" style="background:#333; color:#fff; text-align:left; padding-left:10px;">2. 가입 및 단말기 정보</th>
                 </tr>
                 <tr>
                     <th>가입유형</th>
-                    <td><span class="val" id="out_joinType">기기변경</span></td>
+                    <td><span class="val" id="out_joinType">신규가입</span></td>
                     <th>약정조건</th>
-                    <td><span class="val" id="out_contract">-</span></td>
+                    <td><span class="val" id="out_contract">무약정</span></td>
                 </tr>
                 <tr>
-                    <th>단말기명</th>
+                    <th>단말기 모델명</th>
                     <td><span class="val" id="out_model">-</span></td>
-                    <th>일련번호</th>
+                    <th>단말 일련번호</th>
                     <td><span class="val" id="out_serial">-</span></td>
                 </tr>
                 <tr>
-                    <th>USIM 카드</th>
+                    <th>USIM 카드번호</th>
                     <td colspan="3"><span class="val" id="out_usim">-</span></td>
                 </tr>
                 <tr>
-                    <th>약정 요금제</th>
+                    <th>가입 요금제</th>
                     <td colspan="3"><span class="val" id="out_plan">-</span></td>
                 </tr>
                 <tr>
@@ -276,10 +258,10 @@
 
             <table class="sheet-table">
                 <tr>
-                    <th colspan="4" style="background:#e9ecef; text-align:left; padding-left:10px;">■ 요금 납부 정보</th>
+                    <th colspan="4" style="background:#333; color:#fff; text-align:left; padding-left:10px;">3. 요금 납부 정보</th>
                 </tr>
                 <tr>
-                    <th>납부방식</th>
+                    <th>납부방법</th>
                     <td><span class="val" id="out_payMethod">계좌이체</span></td>
                     <th>금융/카드사</th>
                     <td><span class="val" id="out_bankName">-</span></td>
@@ -292,32 +274,28 @@
                 </tr>
             </table>
 
-            <div class="notice-box">
-                <b>[약관 및 약정 동의사항]</b><br>
-                1. 본 신청서는 통신사 서비스 가입을 위한 정식 서식지로 자동 매핑된 신청서입니다.<br>
-                2. 선택약정/공시지원 약정기간 내 해지 또는 변경 시 위약금이 발생할 수 있습니다.<br>
-                3. 개인정보 수집·이용 및 제3자 제공 동의에 따라 개통 업무 목적으로 활용됩니다.
+            <div class="terms-box">
+                <b>[kt M mobile 이용약관 및 주요 고지사항]</b><br>
+                • 본 신청서는 kt M mobile 이동전화 서비스 가입을 위한 공식 타이핑 신청서입니다.<br>
+                • 약정 기간 내 해지/명의변경/요금제 하향 시 약정 해지 위약금이 발생할 수 있습니다.<br>
+                • 입력하신 주민등록번호 및 결제 정보는 개통 및 요금 청구 목적 외에는 사용되지 않습니다.
             </div>
 
-            <div style="margin-top: 60px; text-align: center; font-size: 13px;">
-                <p>신청일자: <span id="out_date">2026년 08월 03일</span></p>
+            <div style="margin-top: 50px; text-align: center; font-size: 13px;">
+                <p>신청일자: <span id="out_date"></span></p>
                 <br>
-                <p style="font-size: 15px; font-weight: bold;">신청인(명익): <span id="out_signName">____</span> (서명/인)</p>
+                <p style="font-size: 16px; font-weight: bold;">신청인 (명의자): <span id="out_signName">____</span> (서명/인)</p>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    // 현재 날짜 설정
+    // 오늘 날짜 출력
     const today = new Date();
     document.getElementById('out_date').innerText = `${today.getFullYear()}년 ${String(today.getMonth()+1).padStart(2,'0')}월 ${String(today.getDate()).padStart(2,'0')}일`;
 
-    let currentCarrier = 'SKT';
-    let currentCarrierClass = 'skt';
-    let currentDocType = '신청서';
-
-    // 데이터 실시간 동기화 함수
+    // 입력 데이터 실시간 동기화
     function syncData() {
         document.getElementById('out_name').innerText = document.getElementById('in_name').value || '-';
         document.getElementById('out_rrn').innerText = document.getElementById('in_rrn').value || '-';
@@ -343,44 +321,29 @@
         document.getElementById('out_signName').innerText = document.getElementById('in_name').value || '____';
     }
 
-    // 통신사 변경
-    function setCarrier(carrierName, className) {
-        currentCarrier = carrierName;
-        currentCarrierClass = className;
-
-        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active', 'skt', 'kt', 'lgu', 'mvno'));
-        event.target.classList.add('active', className);
-
-        const badge = document.getElementById('docBadge');
-        badge.innerText = carrierName;
-        badge.className = `badge ${className}`;
-
-        updateDocTitle();
+    // JPG 이미지 내보내기 (html2canvas)
+    function exportToJPG() {
+        const paper = document.getElementById('paper-preview');
+        const customerName = document.getElementById('in_name').value || '고객';
+        
+        // 고화질 캡처 설정
+        html2canvas(paper, {
+            scale: 2,
+            useCORS: true,
+            backgroundColor: '#ffffff'
+        }).then(canvas => {
+            const link = document.createElement('a');
+            link.download = `ktMmobile_신청서_${customerName}.jpg`;
+            link.href = canvas.toDataURL('image/jpeg', 0.95);
+            link.click();
+        }).catch(err => {
+            alert('JPG 저장 중 오류가 발생했습니다: ' + err.message);
+        });
     }
 
-    // 서식 종류 변경
-    function setDocType(docType) {
-        currentDocType = docType;
-        document.querySelectorAll('.doc-btn').forEach(btn => btn.classList.remove('active'));
-        event.target.classList.add('active');
-
-        updateDocTitle();
-    }
-
-    function updateDocTitle() {
-        const titleElem = document.getElementById('docTitle');
-        if (currentDocType === '신청서') {
-            titleElem.innerText = `${currentCarrier} 이동전화 서비스 가입/변경 신청서`;
-        } else if (currentDocType === 'MNP') {
-            titleElem.innerText = `${currentCarrier} 번호이동(MNP) 신청 및 동의서`;
-        } else if (currentDocType === '위임장') {
-            titleElem.innerText = `${currentCarrier} 이동전화 개통 위임장 및 개인정보 동의서`;
-        }
-    }
-
-    // 폼 초기화
+    // 입력 초기화
     function resetForm() {
-        if(confirm("입력한 내용을 모두 초기화하시겠습니까?")) {
+        if(confirm("모든 입력 내용을 초기화하시겠습니까?")) {
             document.querySelectorAll('.typing-panel input').forEach(input => input.value = '');
             syncData();
         }
