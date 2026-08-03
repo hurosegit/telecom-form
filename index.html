@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>휴대폰 개통 서식지 자동 작성 시스템</title>
+    <style>
+        * { box-sizing: border-box; font-family: 'Pretendard', '맑은 고딕', sans-serif; }
+        body { margin: 0; padding: 20px; background-color: #f4f6f9; color: #333; }
+        
+        .container { display: flex; gap: 20px; max-width: 1200px; margin: 0 auto; }
+        
+        /* 입력 폼 스타일 */
+        .input-section { flex: 1; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .input-section h2 { margin-top: 0; color: #0056b3; border-bottom: 2px solid #0056b3; padding-bottom: 10px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 14px; }
+        .form-group input, .form-group select { width: 100%; padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; }
+        
+        .btn-print { width: 100%; padding: 12px; background-color: #28a745; color: white; border: none; border-radius: 4px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .btn-print:hover { background-color: #218838; }
+
+        /* 미리보기 / 서식지 스타일 (A4 비율) */
+        .preview-section { flex: 1.2; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); min-height: 800px; }
+        .paper { border: 2px solid #333; padding: 20px; height: 100%; position: relative; }
+        .paper-title { text-align: center; font-size: 22px; font-weight: bold; margin-bottom: 20px; border-bottom: 2px solid #333; padding-bottom: 10px; }
+        
+        .doc-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        .doc-table th, .doc-table td { border: 1px solid #333; padding: 10px; font-size: 13px; text-align: left; }
+        .doc-table th { background-color: #f0f0f0; width: 25%; text-align: center; }
+        .fill-data { font-weight: bold; color: #000; min-height: 18px; display: inline-block; }
+
+        /* 인쇄 전용 설정 (인쇄 시 입력창 숨김) */
+        @media print {
+            body { background: none; padding: 0; }
+            .input-section { display: none; }
+            .container { display: block; }
+            .preview-section { box-shadow: none; padding: 0; width: 100%; }
+            .paper { border: 2px solid #000; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- 1. 정보 입력 영역 -->
+    <div class="input-section">
+        <h2>개통 정보 입력</h2>
+        
+        <div class="form-group">
+            <label for="carrier">통신사 선택</label>
+            <select id="carrier" onchange="updateForm()">
+                <option value="SKT">SKT</option>
+                <option value="KT">KT</option>
+                <option value="LGU+">LGU+</option>
+                <option value="알뜰폰">알뜰폰</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="userName">고객명</label>
+            <input type="text" id="userName" placeholder="홍길동" oninput="updateForm()">
+        </div>
+
+        <div class="form-group">
+            <label for="userPhone">연락처</label>
+            <input type="text" id="userPhone" placeholder="010-0000-0000" oninput="updateForm()">
+        </div>
+
+        <div class="form-group">
+            <label for="deviceModel">기종명 / 모델명</label>
+            <input type="text" id="deviceModel" placeholder="갤럭시 S24 (SM-S921N)" oninput="updateForm()">
+        </div>
+
+        <div class="form-group">
+            <label for="serialNumber">일련번호</label>
+            <input type="text" id="serialNumber" placeholder="123456" oninput="updateForm()">
+        </div>
+
+        <div class="form-group">
+            <label for="planName">요금제명</label>
+            <input type="text" id="planName" placeholder="5G 베이직" oninput="updateForm()">
+        </div>
+
+        <button class="btn-print" onclick="window.print()">서식지 인쇄 / PDF 저장</button>
+    </div>
+
+    <!-- 2. 서식지 자동 작성 미리보기 영역 -->
+    <div class="preview-section">
+        <div class="paper">
+            <div class="paper-title"><span id="docCarrier">SKT</span> 이동통신 가입 신청서</div>
+            
+            <table class="doc-table">
+                <tr>
+                    <th>고객명</th>
+                    <td><span class="fill-data" id="docName">-</span></td>
+                    <th>연락처</th>
+                    <td><span class="fill-data" id="docPhone">-</span></td>
+                </tr>
+                <tr>
+                    <th>단말기명</th>
+                    <td><span class="fill-data" id="docModel">-</span></td>
+                    <th>일련번호</th>
+                    <td><span class="fill-data" id="docSerial">-</span></td>
+                </tr>
+                <tr>
+                    <th>선택 요금제</th>
+                    <td colspan="3"><span class="fill-data" id="docPlan">-</span></td>
+                </tr>
+            </table>
+
+            <div style="margin-top: 150px; text-align: center; font-size: 12px; color: #666;">
+                <p>상기 본인은 위 내용과 같이 이동서비스 가입을 신청합니다.</p>
+                <br><br>
+                <p>신청일: <span id="currentDate"></span></p>
+                <p>신청인: <span id="docSignName">____</span> (인/서명)</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 오늘 날짜 자동 입력
+    document.getElementById('currentDate').innerText = new Date().toLocaleDateString('ko-KR');
+
+    // 입력값을 서식지에 실시간 반영하는 함수
+    function updateForm() {
+        document.getElementById('docCarrier').innerText = document.getElementById('carrier').value;
+        document.getElementById('docName').innerText = document.getElementById('userName').value || '-';
+        document.getElementById('docPhone').innerText = document.getElementById('userPhone').value || '-';
+        document.getElementById('docModel').innerText = document.getElementById('deviceModel').value || '-';
+        document.getElementById('docSerial').innerText = document.getElementById('serialNumber').value || '-';
+        document.getElementById('docPlan').innerText = document.getElementById('planName').value || '-';
+        document.getElementById('docSignName').innerText = document.getElementById('userName').value || '____';
+    }
+</script>
+
+</body>
+</html>
