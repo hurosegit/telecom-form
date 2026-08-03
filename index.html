@@ -3,79 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>kt M mobile 공식 서식지 타이핑 시스템</title>
-    <!-- 고화질 JPG 추출 라이브러리 -->
+    <title>kt M mobile 공식 가입신청서(Ver.2506) 자동 타이핑 시스템</title>
+    <!-- 고화질 JPG 합성 라이브러리 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         * { box-sizing: border-box; font-family: 'Pretendard', '맑은 고딕', sans-serif; }
-        body { margin: 0; padding: 15px; background-color: #2b2d31; color: #fff; }
+        body { margin: 0; padding: 15px; background-color: #1e1e24; color: #fff; }
         
-        .header-bar { max-width: 1500px; margin: 0 auto 15px; background: #ea1d25; padding: 12px 20px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; }
+        .header-bar { max-width: 1600px; margin: 0 auto 15px; background: #ea1d25; padding: 12px 20px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; }
         .header-bar h1 { margin: 0; font-size: 18px; font-weight: 800; }
 
-        .main-layout { display: flex; gap: 20px; max-width: 1500px; margin: 0 auto; }
+        .main-layout { display: flex; gap: 20px; max-width: 1600px; margin: 0 auto; align-items: flex-start; }
 
         /* 좌측: 타이핑 입력 패널 */
-        .typing-panel { flex: 0.9; background: #fff; color: #222; padding: 20px; border-radius: 8px; max-height: 92vh; overflow-y: auto; }
-        .panel-title { font-size: 14px; font-weight: bold; color: #ea1d25; border-bottom: 2px solid #ea1d25; padding-bottom: 5px; margin: 15px 0 10px 0; }
+        .typing-panel { flex: 0.85; background: #fff; color: #222; padding: 20px; border-radius: 8px; max-height: 92vh; overflow-y: auto; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+        .panel-title { font-size: 13px; font-weight: bold; color: #ea1d25; border-bottom: 2px solid #ea1d25; padding-bottom: 4px; margin: 14px 0 8px 0; }
         .panel-title:first-of-type { margin-top: 0; }
 
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; }
         .form-group { display: flex; flex-direction: column; }
         .form-group.full { grid-column: span 2; }
-        .form-group label { font-size: 11px; font-weight: bold; margin-bottom: 3px; color: #555; }
-        .form-group input, .form-group select { padding: 6px 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 12px; }
+        .form-group label { font-size: 11px; font-weight: bold; margin-bottom: 2px; color: #444; }
+        .form-group input, .form-group select { padding: 5px 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 12px; }
 
-        /* 서식지 이미지 파일 선택 버튼 */
-        .file-upload-box { background: #fff3f3; border: 1px dashed #ea1d25; padding: 10px; border-radius: 6px; margin-bottom: 15px; font-size: 12px; color: #333; }
+        .file-box { background: #fff1f1; border: 1px dashed #ea1d25; padding: 10px; border-radius: 6px; margin-bottom: 12px; font-size: 11px; color: #333; }
 
-        /* 버튼 그룹 */
-        .action-btns { display: flex; gap: 8px; margin-top: 20px; }
+        /* 액션 버튼 */
+        .action-btns { display: flex; gap: 8px; margin-top: 15px; }
         .btn { flex: 1; padding: 12px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 13px; }
         .btn-jpg { background: #008080; color: #fff; }
         .btn-print { background: #333; color: #fff; }
-        .btn-reset { background: #777; color: #fff; flex: 0.4; }
+        .btn-reset { background: #888; color: #fff; flex: 0.4; }
 
-        /* 우측: A4 서식지 오버레이 Canvas */
-        .preview-panel { flex: 1.1; background: #1e1f22; padding: 15px; border-radius: 8px; display: flex; justify-content: center; overflow-x: auto; }
-        
-        /* A4 규격 레이아웃 (가로 800px 고정 기준 좌표 계산) */
-        .paper-canvas { position: relative; width: 800px; height: 1130px; background-color: #fff; background-size: 100% 100%; background-repeat: no-repeat; box-shadow: 0 0 15px rgba(0,0,0,0.5); }
-        
-        /* 오버레이 텍스트 공통 스타일 */
-        .overlay-field { position: absolute; font-size: 13px; font-weight: bold; color: #000dff; white-space: nowrap; pointer-events: none; }
-        
-        /* ========================================================= */
-        /* [중요] kt M mobile 공식 서식지 빈칸 위치 좌표 (PX 단위)    */
-        /* 서식지 이미지 스캔 상태에 따라 아래 px 값만 조절하면 됩니다. */
-        /* ========================================================= */
-        #pos_name       { top: 142px; left: 130px; } /* 고객명 */
-        #pos_rrn        { top: 142px; left: 450px; } /* 주민번호 */
-        #pos_phone      { top: 178px; left: 130px; } /* 희망/개통번호 */
-        #pos_subPhone   { top: 178px; left: 450px; } /* 비상연락처 */
-        #pos_address    { top: 214px; left: 130px; } /* 주소 */
-        #pos_idType     { top: 250px; left: 130px; } /* 신분증종류 */
-        #pos_idDate     { top: 250px; left: 450px; } /* 발급일자/면허번호 */
+        /* 우측: PDF 서식지 캔버스 (A4 비율: 800px x 1131px) */
+        .preview-panel { flex: 1.15; background: #2b2b30; padding: 15px; border-radius: 8px; display: flex; justify-content: center; overflow-x: auto; }
+        .paper-canvas { position: relative; width: 800px; height: 1131px; background-color: #fff; background-size: 100% 100%; background-repeat: no-repeat; box-shadow: 0 0 15px rgba(0,0,0,0.6); }
 
-        #pos_joinType   { top: 340px; left: 130px; } /* 가입유형 */
-        #pos_contract   { top: 340px; left: 450px; } /* 약정조건 */
-        #pos_model      { top: 376px; left: 130px; } /* 모델명 */
-        #pos_serial     { top: 376px; left: 450px; } /* 일련번호 */
-        #pos_usim       { top: 412px; left: 130px; } /* USIM번호 */
-        #pos_plan       { top: 448px; left: 130px; } /* 요금제 */
-        #pos_addon      { top: 484px; left: 130px; } /* 부가서비스 */
+        /* PDF 서식지 항목별 오버레이 좌표 (PX 위치) */
+        .field { position: absolute; font-size: 12px; font-weight: bold; color: #0000ff; white-space: nowrap; pointer-events: none; }
 
-        #pos_payMethod  { top: 575px; left: 130px; } /* 납부방식 */
-        #pos_bankName   { top: 575px; left: 450px; } /* 금융사명 */
-        #pos_payNum     { top: 611px; left: 130px; } /* 계좌/카드번호 */
-        #pos_payOwner   { top: 611px; left: 450px; } /* 예금주 */
+        /* === PDF 서식지 세부 좌표 매핑 === */
+        #f_workType     { top: 128px; left: 110px; } /* 업무구분(신규/MNP/기변) */
+        #f_custType     { top: 128px; left: 240px; } /* 고객구분 */
+        #f_agentCode    { top: 128px; left: 400px; } /* 대리점/코드 */
 
-        #pos_date       { top: 980px; left: 320px; font-size: 14px; } /* 신청일자 */
-        #pos_signName   { top: 1020px; left: 520px; font-size: 15px; } /* 서명란 이름 */
+        #f_name         { top: 158px; left: 110px; } /* 고객명 */
+        #f_phone        { top: 158px; left: 290px; } /* 연락처 */
+        #f_rrn          { top: 182px; left: 110px; } /* 주민등록번호 */
+        #f_email        { top: 182px; left: 290px; } /* 이메일 */
+        #f_address      { top: 206px; left: 110px; } /* 주소 */
+
+        #f_model        { top: 158px; left: 510px; } /* 핸드폰모델명 */
+        #f_serial       { top: 182px; left: 510px; } /* 일련번호 */
+        #f_price        { top: 206px; left: 510px; } /* 출고가 */
+        #f_support      { top: 230px; left: 510px; } /* 공시지원금 */
+        #f_principal    { top: 254px; left: 510px; } /* 할부원금 */
+
+        #f_payMethod    { top: 285px; left: 110px; } /* 자동납부 수단 */
+        #f_bankName     { top: 285px; left: 230px; } /* 은행/카드사명 */
+        #f_payNum       { top: 309px; left: 110px; } /* 계좌/카드번호 */
+        #f_payOwner     { top: 333px; left: 110px; } /* 예금주 */
+
+        #f_planName     { top: 285px; left: 510px; } /* 선택한 요금상품 */
+        #f_planFee      { top: 309px; left: 510px; } /* 월정액 요금 */
+        #f_monthPay     { top: 333px; left: 510px; } /* 월 기본납부액 */
+
+        #f_reqPhone     { top: 375px; left: 110px; } /* 가입희망번호 */
+        #f_simModel     { top: 399px; left: 110px; } /* SIM 모델명 */
+        #f_simSerial    { top: 399px; left: 290px; } /* SIM 일련번호 */
+        #f_imei         { top: 423px; left: 110px; } /* IMEI */
+
+        #f_mnpPhone     { top: 465px; left: 110px; } /* 번호이동할 전화번호 */
+        #f_mnpPrevOp    { top: 465px; left: 290px; } /* 변경 전 통신사 */
+
+        #f_date         { top: 525px; left: 120px; font-size: 13px; } /* 신청일자 */
+        #f_signName     { top: 525px; left: 320px; font-size: 13px; } /* 신청/가입자 서명란 */
 
         @media print {
             body { padding: 0; background: #fff; }
             .header-bar, .typing-panel, .action-btns { display: none !important; }
+            .main-layout { display: block; }
             .preview-panel { padding: 0; background: #fff; }
             .paper-canvas { box-shadow: none; }
         }
@@ -84,116 +91,143 @@
 <body>
 
 <div class="header-bar">
-    <h1>📱 kt M mobile 공식 서식지 타이핑 시스템</h1>
-    <span>공식 이미지 좌표 오버레이 방식</span>
+    <h1>📱 kt M mobile 공식 가입신청서(Ver.2506) 자동 타이핑 시스템</h1>
+    <span>공식 PDF 1페이지 좌표 매핑</span>
 </div>
 
 <div class="main-layout">
-    <!-- 좌측 타이핑 입력창 -->
+    <!-- 좌측 타이핑 입력 폼 -->
     <div class="typing-panel">
-        <div class="file-upload-box">
-            <b>📂 서식지 이미지 교체 (선택):</b><br>
-            엑셀에서 추출한 엠모바일 공식 서식지 JPG 파일이 있다면 아래에서 선택하세요.<br>
-            <input type="file" id="bgUploader" accept="image/*" onchange="loadCustomBackground(this)" style="margin-top:5px;">
+        <div class="file-box">
+            <b>📄 PDF 1페이지 서식지 이미지 설정:</b><br>
+            `후불)KTM모바일 가입신청서(성인) ver 2506.pdf` 파일의 1페이지를 JPG로 저장하여 아래에서 선택하면 배경이 바뀝니다.<br>
+            <input type="file" id="bgUploader" accept="image/*" onchange="loadBgImage(this)" style="margin-top:5px;">
         </div>
 
         <div class="panel-title">1. 고객 기본 정보</div>
         <div class="form-grid">
             <div class="form-group">
-                <label>고객명</label>
-                <input type="text" id="in_name" placeholder="홍길동" oninput="renderOverlay()">
-            </div>
-            <div class="form-group">
-                <label>주민등록번호 (전체)</label>
-                <input type="text" id="in_rrn" placeholder="900101-1******" oninput="renderOverlay()">
-            </div>
-            <div class="form-group">
-                <label>개통 희망번호</label>
-                <input type="text" id="in_phone" placeholder="010-1234-5678" oninput="renderOverlay()">
-            </div>
-            <div class="form-group">
-                <label>비상 연락처</label>
-                <input type="text" id="in_subPhone" placeholder="010-9876-5432" oninput="renderOverlay()">
-            </div>
-            <div class="form-group full">
-                <label>주민등록상 주소</label>
-                <input type="text" id="in_address" placeholder="서울특별시 강남구 테헤란로 123" oninput="renderOverlay()">
-            </div>
-            <div class="form-group">
-                <label>신분증 종류</label>
-                <select id="in_idType" onchange="renderOverlay()">
-                    <option value="주민등록증">주민등록증</option>
-                    <option value="운전면허증">운전면허증</option>
-                    <option value="여권">여권</option>
-                    <option value="외국인등록증">외국인등록증</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>발급일자 / 면허번호</label>
-                <input type="text" id="in_idDate" placeholder="2022.05.20 / 서울-12-123456" oninput="renderOverlay()">
-            </div>
-        </div>
-
-        <div class="panel-title">2. 단말기 및 개통 정보</div>
-        <div class="form-grid">
-            <div class="form-group">
-                <label>가입유형</label>
-                <select id="in_joinType" onchange="renderOverlay()">
-                    <option value="신규가입">신규가입</option>
-                    <option value="번호이동(MNP)">번호이동(MNP)</option>
+                <label>업무구분</label>
+                <select id="in_workType" onchange="updateView()">
+                    <option value="신규">신규</option>
+                    <option value="번호이동">번호이동</option>
                     <option value="기기변경">기기변경</option>
                 </select>
             </div>
             <div class="form-group">
-                <label>모델명</label>
-                <input type="text" id="in_model" placeholder="SM-S921N (S24)" oninput="renderOverlay()">
-            </div>
-            <div class="form-group">
-                <label>단말 일련번호</label>
-                <input type="text" id="in_serial" placeholder="1234567" oninput="renderOverlay()">
-            </div>
-            <div class="form-group">
-                <label>USIM 번호</label>
-                <input type="text" id="in_usim" placeholder="M8000-123456" oninput="renderOverlay()">
-            </div>
-            <div class="form-group">
-                <label>약정유형</label>
-                <select id="in_contract" onchange="renderOverlay()">
-                    <option value="무약정">무약정</option>
-                    <option value="24개월 선택약정">24개월 선택약정</option>
-                    <option value="24개월 공시약정">24개월 공시약정</option>
+                <label>고객구분</label>
+                <select id="in_custType" onchange="updateView()">
+                    <option value="개인">개인</option>
+                    <option value="개인사업자">개인사업자</option>
+                    <option value="법인">법인</option>
                 </select>
             </div>
             <div class="form-group">
-                <label>요금제명</label>
-                <input type="text" id="in_plan" placeholder="모두다 맘껏 11GB+" oninput="renderOverlay()">
+                <label>고객명(법인명)</label>
+                <input type="text" id="in_name" placeholder="홍길동" oninput="updateView()">
+            </div>
+            <div class="form-group">
+                <label>주민번호(법인/사업자)</label>
+                <input type="text" id="in_rrn" placeholder="900101-1******" oninput="updateView()">
+            </div>
+            <div class="form-group">
+                <label>연락처</label>
+                <input type="text" id="in_phone" placeholder="010-1234-5678" oninput="updateView()">
+            </div>
+            <div class="form-group">
+                <label>이메일</label>
+                <input type="text" id="in_email" placeholder="user@example.com" oninput="updateView()">
             </div>
             <div class="form-group full">
-                <label>부가서비스</label>
-                <input type="text" id="in_addon" placeholder="통화대기, 데이터안심차단" oninput="renderOverlay()">
+                <label>주소</label>
+                <input type="text" id="in_address" placeholder="서울특별시 강남구 테헤란로 123" oninput="updateView()">
             </div>
         </div>
 
-        <div class="panel-title">3. 요금 납부 정보</div>
+        <div class="panel-title">2. 단말기 및 요금 정보</div>
         <div class="form-grid">
             <div class="form-group">
-                <label>납부수단</label>
-                <select id="in_payMethod" onchange="renderOverlay()">
-                    <option value="은행 계좌이체">은행 계좌이체</option>
-                    <option value="신용카드 결제">신용카드 결제</option>
+                <label>핸드폰 모델명</label>
+                <input type="text" id="in_model" placeholder="SM-S921N" oninput="updateView()">
+            </div>
+            <div class="form-group">
+                <label>일련번호</label>
+                <input type="text" id="in_serial" placeholder="1234567" oninput="updateView()">
+            </div>
+            <div class="form-group">
+                <label>출고가 (원)</label>
+                <input type="text" id="in_price" placeholder="1,155,000" oninput="updateView()">
+            </div>
+            <div class="form-group">
+                <label>공시지원금 (원)</label>
+                <input type="text" id="in_support" placeholder="300,000" oninput="updateView()">
+            </div>
+            <div class="form-group">
+                <label>할부원금 (원)</label>
+                <input type="text" id="in_principal" placeholder="855,000" oninput="updateView()">
+            </div>
+            <div class="form-group">
+                <label>선택한 요금상품</label>
+                <input type="text" id="in_planName" placeholder="모두다 맘껏 11GB+" oninput="updateView()">
+            </div>
+            <div class="form-group">
+                <label>월정액 요금 (VAT포함)</label>
+                <input type="text" id="in_planFee" placeholder="33,000원" oninput="updateView()">
+            </div>
+            <div class="form-group">
+                <label>월 기본납부액</label>
+                <input type="text" id="in_monthPay" placeholder="68,625원" oninput="updateView()">
+            </div>
+        </div>
+
+        <div class="panel-title">3. 요금 자동납부 정보</div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label>자동납부 구분</label>
+                <select id="in_payMethod" onchange="updateView()">
+                    <option value="자동이체(은행)">자동이체(은행)</option>
+                    <option value="신용카드">신용카드</option>
                 </select>
             </div>
             <div class="form-group">
-                <label>금융사 / 카드사</label>
-                <input type="text" id="in_bankName" placeholder="NH농협은행 / 삼성카드" oninput="renderOverlay()">
+                <label>은행/카드사명</label>
+                <input type="text" id="in_bankName" placeholder="KB국민은행" oninput="updateView()">
             </div>
             <div class="form-group">
-                <label>계좌번호 / 카드번호</label>
-                <input type="text" id="in_payNum" placeholder="302-1234-5678-01" oninput="renderOverlay()">
+                <label>계좌/카드번호</label>
+                <input type="text" id="in_payNum" placeholder="123-456-789012" oninput="updateView()">
             </div>
             <div class="form-group">
-                <label>예금주명</label>
-                <input type="text" id="in_payOwner" placeholder="홍길동" oninput="renderOverlay()">
+                <label>예금주(카드주)</label>
+                <input type="text" id="in_payOwner" placeholder="홍길동" oninput="updateView()">
+            </div>
+        </div>
+
+        <div class="panel-title">4. 이용신청내용 및 MNP</div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label>가입희망번호</label>
+                <input type="text" id="in_reqPhone" placeholder="010-XXXX-5678" oninput="updateView()">
+            </div>
+            <div class="form-group">
+                <label>IMEI (일련번호)</label>
+                <input type="text" id="in_imei" placeholder="351234567890123" oninput="updateView()">
+            </div>
+            <div class="form-group">
+                <label>SIM 모델명</label>
+                <input type="text" id="in_simModel" placeholder="K9040" oninput="updateView()">
+            </div>
+            <div class="form-group">
+                <label>SIM 일련번호</label>
+                <input type="text" id="in_simSerial" placeholder="00012345" oninput="updateView()">
+            </div>
+            <div class="form-group">
+                <label>번호이동 할 전화번호</label>
+                <input type="text" id="in_mnpPhone" placeholder="010-9876-5432" oninput="updateView()">
+            </div>
+            <div class="form-group">
+                <label>변경 전 통신사</label>
+                <input type="text" id="in_mnpPrevOp" placeholder="SKT / KT / LGU+" oninput="updateView()">
             </div>
         </div>
 
@@ -204,50 +238,58 @@
         </div>
     </div>
 
-    <!-- 우측: 서식지 이미지 + 오버레이 레이어 -->
+    <!-- 우측: 서식지 오버레이 Canvas -->
     <div class="preview-panel">
         <div class="paper-canvas" id="paperCanvas">
-            <!-- 실시간 오버레이 필드 (CSS 좌표값에 의해 위치 결정) -->
-            <div class="overlay-field" id="pos_name"></div>
-            <div class="overlay-field" id="pos_rrn"></div>
-            <div class="overlay-field" id="pos_phone"></div>
-            <div class="overlay-field" id="pos_subPhone"></div>
-            <div class="overlay-field" id="pos_address"></div>
-            <div class="overlay-field" id="pos_idType"></div>
-            <div class="overlay-field" id="pos_idDate"></div>
+            <!-- 실시간 오버레이 필드 -->
+            <div class="field" id="f_workType"></div>
+            <div class="field" id="f_custType"></div>
+            <div class="field" id="f_agentCode"></div>
 
-            <div class="overlay-field" id="pos_joinType"></div>
-            <div class="overlay-field" id="pos_contract"></div>
-            <div class="overlay-field" id="pos_model"></div>
-            <div class="overlay-field" id="pos_serial"></div>
-            <div class="overlay-field" id="pos_usim"></div>
-            <div class="overlay-field" id="pos_plan"></div>
-            <div class="overlay-field" id="pos_addon"></div>
+            <div class="field" id="f_name"></div>
+            <div class="field" id="f_phone"></div>
+            <div class="field" id="f_rrn"></div>
+            <div class="field" id="f_email"></div>
+            <div class="field" id="f_address"></div>
 
-            <div class="overlay-field" id="pos_payMethod"></div>
-            <div class="overlay-field" id="pos_bankName"></div>
-            <div class="overlay-field" id="pos_payNum"></div>
-            <div class="overlay-field" id="pos_payOwner"></div>
+            <div class="field" id="f_model"></div>
+            <div class="field" id="f_serial"></div>
+            <div class="field" id="f_price"></div>
+            <div class="field" id="f_support"></div>
+            <div class="field" id="f_principal"></div>
 
-            <div class="overlay-field" id="pos_date"></div>
-            <div class="overlay-field" id="pos_signName"></div>
+            <div class="field" id="f_payMethod"></div>
+            <div class="field" id="f_bankName"></div>
+            <div class="field" id="f_payNum"></div>
+            <div class="field" id="f_payOwner"></div>
+
+            <div class="field" id="f_planName"></div>
+            <div class="field" id="f_planFee"></div>
+            <div class="field" id="f_monthPay"></div>
+
+            <div class="field" id="f_reqPhone"></div>
+            <div class="field" id="f_simModel"></div>
+            <div class="field" id="f_simSerial"></div>
+            <div class="field" id="f_imei"></div>
+
+            <div class="field" id="f_mnpPhone"></div>
+            <div class="field" id="f_mnpPrevOp"></div>
+
+            <div class="field" id="f_date"></div>
+            <div class="field" id="f_signName"></div>
         </div>
     </div>
 </div>
 
 <script>
-    // 오늘 날짜 설정
+    // 날짜 설정
     const today = new Date();
-    const dateStr = `${today.getFullYear()}년 ${String(today.getMonth()+1).padStart(2,'0')}월 ${String(today.getDate()).padStart(2,'0')}일`;
-
-    // 서식지 기본 배경 이미지 (SVG 원본 양식 기본 탑재)
-    const defaultFormBg = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1130" viewBox="0 0 800 1130"><rect width="800" height="1130" fill="%23ffffff"/><text x="40" y="60" font-family="sans-serif" font-size="24" font-weight="bold" fill="%23ea1d25">kt M mobile 개통 신청서 (공식서식 양식)</text><line x1="40" y1="80" x2="760" y2="80" stroke="%23ea1d25" stroke-width="3"/><rect x="40" y="110" width="720" height="170" fill="none" stroke="%23333" stroke-width="1.5"/><line x1="40" y1="145" x2="760" y2="145" stroke="%23ccc"/><line x1="40" y1="181" x2="760" y2="181" stroke="%23ccc"/><line x1="40" y1="217" x2="760" y2="217" stroke="%23ccc"/><text x="50" y="135" font-family="sans-serif" font-size="12" fill="%23666">신청인명</text><text x="370" y="135" font-family="sans-serif" font-size="12" fill="%23666">주민번호</text><text x="50" y="171" font-family="sans-serif" font-size="12" fill="%23666">개통번호</text><text x="370" y="171" font-family="sans-serif" font-size="12" fill="%23666">비상연락처</text><text x="50" y="207" font-family="sans-serif" font-size="12" fill="%23666">주소</text><text x="50" y="243" font-family="sans-serif" font-size="12" fill="%23666">신분증</text><text x="370" y="243" font-family="sans-serif" font-size="12" fill="%23666">발급일자</text><rect x="40" y="310" width="720" height="210" fill="none" stroke="%23333" stroke-width="1.5"/><line x1="40" y1="345" x2="760" y2="345" stroke="%23ccc"/><line x1="40" y1="381" x2="760" y2="381" stroke="%23ccc"/><line x1="40" y1="417" x2="760" y2="417" stroke="%23ccc"/><line x1="40" y1="453" x2="760" y2="453" stroke="%23ccc"/><text x="50" y="333" font-family="sans-serif" font-size="12" fill="%23666">가입유형</text><text x="370" y="333" font-family="sans-serif" font-size="12" fill="%23666">약정조건</text><text x="50" y="369" font-family="sans-serif" font-size="12" fill="%23666">모델명</text><text x="370" y="369" font-family="sans-serif" font-size="12" fill="%23666">일련번호</text><text x="50" y="405" font-family="sans-serif" font-size="12" fill="%23666">USIM번호</text><text x="50" y="441" font-family="sans-serif" font-size="12" fill="%23666">요금제</text><text x="50" y="477" font-family="sans-serif" font-size="12" fill="%23666">부가서비스</text><rect x="40" y="545" width="720" height="100" fill="none" stroke="%23333" stroke-width="1.5"/><line x1="40" y1="580" x2="760" y2="580" stroke="%23ccc"/><text x="50" y="568" font-family="sans-serif" font-size="12" fill="%23666">납부수단</text><text x="370" y="568" font-family="sans-serif" font-size="12" fill="%23666">금융사</text><text x="50" y="604" font-family="sans-serif" font-size="12" fill="%23666">계좌/카드번호</text><text x="370" y="604" font-family="sans-serif" font-size="12" fill="%23666">예금주</text><rect x="40" y="670" width="720" height="230" fill="%23fafafa" stroke="%23aaa" stroke-width="1"/><text x="55" y="695" font-family="sans-serif" font-size="12" font-weight="bold" fill="%23333">[개통 약관 및 동의사항]</text><text x="55" y="725" font-family="sans-serif" font-size="11" fill="%23555">1. 본 서식지는 kt M mobile 이동전화 서비스 가입을 위한 정식 개통 신청서입니다.</text><text x="55" y="750" font-family="sans-serif" font-size="11" fill="%23555">2. 제공받은 개인정보는 이동전화 개통 및 요금 청구 목적으로만 활용됩니다.</text><text x="220" y="975" font-family="sans-serif" font-size="13" fill="%23333">신청일자:</text><text x="390" y="1015" font-family="sans-serif" font-size="14" font-weight="bold" fill="%23111">신청인(서명):</text></svg>`;
+    const dateStr = `${today.getFullYear()}년  ${today.getMonth()+1}월  ${today.getDate()}일`;
 
     const canvas = document.getElementById('paperCanvas');
-    canvas.style.backgroundImage = `url('${defaultFormBg}')`;
 
-    // 사용자 커스텀 서식지 이미지 업로드 처리
-    function loadCustomBackground(input) {
+    // 사용자가 PDF 1페이지 배경 이미지 등록 시
+    function loadBgImage(input) {
         if (input.files && input.files[0]) {
             const reader = new FileReader();
             reader.onload = function(e) {
@@ -257,43 +299,53 @@
         }
     }
 
-    // 데이터 오버레이 렌더링
-    function renderOverlay() {
-        document.getElementById('pos_name').innerText = document.getElementById('in_name').value;
-        document.getElementById('pos_rrn').innerText = document.getElementById('in_rrn').value;
-        document.getElementById('pos_phone').innerText = document.getElementById('in_phone').value;
-        document.getElementById('pos_subPhone').innerText = document.getElementById('in_subPhone').value;
-        document.getElementById('pos_address').innerText = document.getElementById('in_address').value;
-        document.getElementById('pos_idType').innerText = document.getElementById('in_idType').value;
-        document.getElementById('pos_idDate').innerText = document.getElementById('in_idDate').value;
+    // 입력값을 오버레이 레이어에 매핑
+    function updateView() {
+        document.getElementById('f_workType').innerText = document.getElementById('in_workType').value;
+        document.getElementById('f_custType').innerText = document.getElementById('in_custType').value;
+        document.getElementById('f_name').innerText = document.getElementById('in_name').value;
+        document.getElementById('f_rrn').innerText = document.getElementById('in_rrn').value;
+        document.getElementById('f_phone').innerText = document.getElementById('in_phone').value;
+        document.getElementById('f_email').innerText = document.getElementById('in_email').value;
+        document.getElementById('f_address').innerText = document.getElementById('in_address').value;
 
-        document.getElementById('pos_joinType').innerText = document.getElementById('in_joinType').value;
-        document.getElementById('pos_contract').innerText = document.getElementById('in_contract').value;
-        document.getElementById('pos_model').innerText = document.getElementById('in_model').value;
-        document.getElementById('pos_serial').innerText = document.getElementById('in_serial').value;
-        document.getElementById('pos_usim').innerText = document.getElementById('in_usim').value;
-        document.getElementById('pos_plan').innerText = document.getElementById('in_plan').value;
-        document.getElementById('pos_addon').innerText = document.getElementById('in_addon').value;
+        document.getElementById('f_model').innerText = document.getElementById('in_model').value;
+        document.getElementById('f_serial').innerText = document.getElementById('in_serial').value;
+        document.getElementById('f_price').innerText = document.getElementById('in_price').value;
+        document.getElementById('f_support').innerText = document.getElementById('in_support').value;
+        document.getElementById('f_principal').innerText = document.getElementById('in_principal').value;
 
-        document.getElementById('pos_payMethod').innerText = document.getElementById('in_payMethod').value;
-        document.getElementById('pos_bankName').innerText = document.getElementById('in_bankName').value;
-        document.getElementById('pos_payNum').innerText = document.getElementById('in_payNum').value;
-        document.getElementById('pos_payOwner').innerText = document.getElementById('in_payOwner').value;
+        document.getElementById('f_payMethod').innerText = document.getElementById('in_payMethod').value;
+        document.getElementById('f_bankName').innerText = document.getElementById('in_bankName').value;
+        document.getElementById('f_payNum').innerText = document.getElementById('in_payNum').value;
+        document.getElementById('f_payOwner').innerText = document.getElementById('in_payOwner').value;
 
-        document.getElementById('pos_date').innerText = dateStr;
-        document.getElementById('pos_signName').innerText = document.getElementById('in_name').value;
+        document.getElementById('f_planName').innerText = document.getElementById('in_planName').value;
+        document.getElementById('f_planFee').innerText = document.getElementById('in_planFee').value;
+        document.getElementById('f_monthPay').innerText = document.getElementById('in_monthPay').value;
+
+        document.getElementById('f_reqPhone').innerText = document.getElementById('in_reqPhone').value;
+        document.getElementById('f_simModel').innerText = document.getElementById('in_simModel').value;
+        document.getElementById('f_simSerial').innerText = document.getElementById('in_simSerial').value;
+        document.getElementById('f_imei').innerText = document.getElementById('in_imei').value;
+
+        document.getElementById('f_mnpPhone').innerText = document.getElementById('in_mnpPhone').value;
+        document.getElementById('f_mnpPrevOp').innerText = document.getElementById('in_mnpPrevOp').value;
+
+        document.getElementById('f_date').innerText = dateStr;
+        document.getElementById('f_signName').innerText = document.getElementById('in_name').value;
     }
 
-    // JPG 이미지 다운로드
+    // JPG 이미지 내보내기
     function downloadJPG() {
         const name = document.getElementById('in_name').value || '고객';
         html2canvas(canvas, {
-            scale: 2, // 고해상도 캡처
+            scale: 2,
             useCORS: true,
             backgroundColor: '#ffffff'
         }).then(cvs => {
             const link = document.createElement('a');
-            link.download = `ktMmobile_개통신청서_${name}.jpg`;
+            link.download = `KTM모바일_이용신청서_${name}.jpg`;
             link.href = cvs.toDataURL('image/jpeg', 0.95);
             link.click();
         });
@@ -302,7 +354,7 @@
     function resetForm() {
         if (confirm("입력한 내용을 모두 초기화하시겠습니까?")) {
             document.querySelectorAll('.typing-panel input').forEach(i => i.value = '');
-            renderOverlay();
+            updateView();
         }
     }
 </script>
